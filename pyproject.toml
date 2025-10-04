@@ -1,7 +1,7 @@
 [project]
 name = "Calculator for MAI"
 authors = [{name = 'spTrent', email = 'artemrazumovvv@gmail.com'}]
-version = "1.0.0"
+version = "2.0.0"
 description = "Calculator in reverse polish notation for Laboratory job MAI"
 requires-python = ">=3.12"
 dependencies = [
@@ -21,7 +21,16 @@ target-version = 'py312'
 
 [tool.ruff.lint]
 fixable = ['ALL']
-select = ['E', 'F', 'I', 'B']
+select = ['E', 'F', 'I', 'B', 'Q']
+ignore = ['E101']
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "double"
 
 [tool.mypy]
 python_version = '3.12'

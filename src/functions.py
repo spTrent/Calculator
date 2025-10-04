@@ -3,6 +3,38 @@ import re
 import exceptions
 
 
+def remove_staples(stdin: str) -> str:
+    """
+    Меняет выражение в скобках в stdin на их значение
+
+    Находит самую правую открывающуюся и соответсвующую ей закрывающуюся,
+    считает выражение внутри них и записывает вместо него значение
+
+    Args:
+        stdin(str): строка с выражениями в скобках
+
+    Returns:
+        stdin(str): строка без выражений в скобках. Заменены на значения
+    """
+    opened_cnt: int = stdin.count('(')
+    closed_cnt: int = stdin.count(')')
+    if opened_cnt > closed_cnt:
+        raise exceptions.InvalidInput('Скобка открывается, но не закрывается')
+    if opened_cnt < closed_cnt:
+        raise exceptions.InvalidInput('Скобка закрывается, но не открывается')
+    for _ in range(opened_cnt):
+        opened: int = stdin.rfind('(')
+        closed: int = stdin.find(')', opened)
+        current_staples = stdin[opened + 1 : closed]
+        try:
+            current_tokens = tokenize(current_staples)
+            current_rpn = str(do_rpn(current_tokens))
+            stdin = stdin[:opened] + current_rpn + stdin[closed + 1 :]
+        except exceptions.CalculatorError as message:
+            print(f'{type(message).__name__}: {message}')
+    return stdin
+
+
 def int_or_float(digit: str) -> float | int:
     """
     Переводит число в правильный тип
@@ -20,7 +52,7 @@ def int_or_float(digit: str) -> float | int:
 
 def division(token1: float | int, token2: float | int) -> float:
     if token2 == 0:
-        raise exceptions.ZeroDivisionError(f"Деление на 0. {token1} / 0")
+        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} / 0')
     if token1 % token2 == 0:
         return int(token1 / token2)
     return token1 / token2
@@ -30,26 +62,26 @@ def int_division(token1: int | float, token2: int | float) -> int:
     if token1.is_integer() and token2.is_integer() and token2 != 0:
         return int(token1 // token2)
     if token2 == 0:
-        raise exceptions.ZeroDivisionError(f"Деление на 0. {token1} / 0")
-    raise exceptions.TypeError(f"// только для целых. {token1} // {token2}")
+        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} // 0')
+    raise exceptions.TypeError(f'// только для целых. {token1} // {token2}')
 
 
 def remainder(token1: int | float, token2: int | float) -> int:
     if token1.is_integer() and token2.is_integer() and token2 != 0:
         return int(token1 % token2)
     if token2 == 0:
-        raise exceptions.ZeroDivisionError(f"Деление на 0. {token1} / 0")
-    raise exceptions.TypeError(f"% только для целых. {token1} % {token2}")
+        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} % 0')
+    raise exceptions.TypeError(f'% только для целых. {token1} % {token2}')
 
 
 operations = {
-    "+": lambda x, y: x + y,
-    "-": lambda x, y: x - y,
-    "*": lambda x, y: x * y,
-    "**": lambda x, y: x**y,
-    "/": division,
-    "//": int_division,
-    "%": remainder,
+    '+': lambda x, y: x + y,
+    '-': lambda x, y: x - y,
+    '*': lambda x, y: x * y,
+    '**': lambda x, y: x**y,
+    '/': division,
+    '//': int_division,
+    '%': remainder,
 }
 
 
@@ -67,9 +99,9 @@ def tokenize(stdin: str) -> list[str | float | int]:
     Returns:
         tokens(list): список токенов.
     """
-    s: str = stdin.replace("~", "-").replace("$", "")
+    s: str = stdin.replace('~', '-').replace('$', '')
     PATTERN = re.compile(
-        r"([+-]?\d+(\.\d+)?(e[+-]?\d+)?|[+-]?\d+(\.\d+)?|[+-]|\*\*|//|%|[*/])"
+        r'([+-]?\d+(\.\d+)?(e[+-]?\d+)?|[+-]?\d+(\.\d+)?|[+-]|\*\*|//|%|[*/])'
     )
     tokens: list[str | int | float] = []
     for token_group in re.finditer(PATTERN, s):
@@ -104,7 +136,7 @@ def do_rpn(tokens: list[float | int | str]) -> float | int:
             new_token: float | int = operations[operator](item1, item2)
             stack.append(new_token)
         elif token in operations and len(stack) < 2:
-            raise exceptions.SyntaxError(
+            raise exceptions.InvalidInput(
                 f"""Неверное количество операций и чисел:
              Количество чисел перед операцией({token}): {len(stack)}"""
             )
@@ -113,7 +145,7 @@ def do_rpn(tokens: list[float | int | str]) -> float | int:
             stack.append(num_token)
     if len(stack) == 1:
         return stack[0]
-    raise exceptions.SyntaxError(
+    raise exceptions.InvalidInput(
         f"""Неверное количество операций и чисел:
              Операции закончились, количество оставшихся чисел: {len(stack)}"""
     )

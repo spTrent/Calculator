@@ -14,7 +14,7 @@ class TypeError(CalculatorError):
         super().__init__(message)
 
 
-class SyntaxError(CalculatorError):
+class InvalidInput(CalculatorError):
     """
     Ошибка неверного ввода:
     неправильное количество чисел и операций.
