@@ -1,4 +1,5 @@
 import re
+from math import e, pi
 
 import exceptions
 
@@ -25,6 +26,10 @@ def remove_staples(stdin: str) -> str:
     for _ in range(opened_cnt):
         opened: int = stdin.rfind('(')
         closed: int = stdin.find(')', opened)
+        if closed == -1:
+            raise exceptions.InvalidInput(
+                'Скобка открывается, но не закрывается'
+            )
         current_staples = stdin[opened + 1 : closed]
         try:
             current_tokens = tokenize(current_staples)
@@ -101,13 +106,17 @@ def tokenize(stdin: str) -> list[str | float | int]:
     """
     s: str = stdin.replace('~', '-').replace('$', '')
     PATTERN = re.compile(
-        r'([+-]?\d+(\.\d+)?(e[+-]?\d+)?|[+-]?\d+(\.\d+)?|[+-]|\*\*|//|%|[*/])'
+        r'([+-]?\d+(\.\d+)?(e[+-]?\d+)?|E|π|[+-]?\d+(\.\d+)?|[+-]|\*\*|//|%|[*/])'
     )
     tokens: list[str | int | float] = []
     for token_group in re.finditer(PATTERN, s):
         token = token_group.group()
         if token in operations:
             tokens += [token]
+        elif token == 'E':
+            tokens += [e]
+        elif token == 'π':
+            tokens += [pi]
         else:
             tokens += [int_or_float(token)]
     return tokens
