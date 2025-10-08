@@ -2,6 +2,13 @@ import re
 from math import e, pi
 
 import exceptions
+from operations import operations
+
+
+def check_accuracy(stdin: str) -> None:
+    for el in stdin:
+        if el not in '+-~$0123456789Eπ. ()*/%':
+            raise exceptions.InvalidInput(f'Неизвестный символ: {el}')
 
 
 def remove_staples(stdin: str) -> str:
@@ -31,12 +38,9 @@ def remove_staples(stdin: str) -> str:
                 'Скобка открывается, но не закрывается'
             )
         current_staples = stdin[opened + 1 : closed]
-        try:
-            current_tokens = tokenize(current_staples)
-            current_rpn = str(do_rpn(current_tokens))
-            stdin = stdin[:opened] + current_rpn + stdin[closed + 1 :]
-        except exceptions.CalculatorError as message:
-            print(f'{type(message).__name__}: {message}')
+        current_tokens = tokenize(current_staples)
+        current_rpn = str(do_rpn(current_tokens))
+        stdin = stdin[:opened] + current_rpn + stdin[closed + 1 :]
     return stdin
 
 
@@ -53,41 +57,6 @@ def int_or_float(digit: str) -> float | int:
     if float(digit).is_integer():
         return int(float(digit))
     return float(digit)
-
-
-def division(token1: float | int, token2: float | int) -> float:
-    if token2 == 0:
-        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} / 0')
-    if token1 % token2 == 0:
-        return int(token1 / token2)
-    return token1 / token2
-
-
-def int_division(token1: int | float, token2: int | float) -> int:
-    if token1.is_integer() and token2.is_integer() and token2 != 0:
-        return int(token1 // token2)
-    if token2 == 0:
-        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} // 0')
-    raise exceptions.TypeError(f'// только для целых. {token1} // {token2}')
-
-
-def remainder(token1: int | float, token2: int | float) -> int:
-    if token1.is_integer() and token2.is_integer() and token2 != 0:
-        return int(token1 % token2)
-    if token2 == 0:
-        raise exceptions.ZeroDivisionError(f'Деление на 0. {token1} % 0')
-    raise exceptions.TypeError(f'% только для целых. {token1} % {token2}')
-
-
-operations = {
-    '+': lambda x, y: x + y,
-    '-': lambda x, y: x - y,
-    '*': lambda x, y: x * y,
-    '**': lambda x, y: x**y,
-    '/': division,
-    '//': int_division,
-    '%': remainder,
-}
 
 
 def tokenize(stdin: str) -> list[str | float | int]:

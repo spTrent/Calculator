@@ -1,11 +1,11 @@
 [project]
-name = "Calculator for MAI"
+name = "Calculator"
 authors = [{name = 'spTrent', email = 'artemrazumovvv@gmail.com'}]
 version = "2.0.0"
 description = "Calculator in reverse polish notation for Laboratory job MAI"
 requires-python = ">=3.12"
 dependencies = [
-    "pytest>=8.4.2",
+
 ]
 
 [dependency-groups]
@@ -13,6 +13,7 @@ dev = [
     "pre-commit>=4.3.0",
     "ruff>=0.13.2",
     "mypy>=1.18.2",
+    "pytest>=8.4.2",
 ]
 
 [tool.ruff]
@@ -37,3 +38,7 @@ python_version = '3.12'
 disallow_untyped_defs = true
 ignore_missing_imports = true
 strict_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ['tests']
+pythonpath = 'src/'
