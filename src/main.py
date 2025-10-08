@@ -1,5 +1,5 @@
-import exceptions
-import functions
+import src.exceptions
+import src.functions
 
 
 def main() -> None:
@@ -8,12 +8,12 @@ def main() -> None:
         if not stdin:
             break
         try:
-            functions.check_accuracy(stdin)
-            s = functions.remove_staples(stdin)
-            tokens = functions.tokenize(s)
-            res = functions.do_rpn(tokens)
+            src.functions.check_accuracy(stdin)
+            s = src.functions.remove_staples(stdin)
+            tokens = src.functions.tokenize(s)
+            res = src.functions.do_rpn(tokens)
             print(res)
-        except exceptions.CalculatorError as message:
+        except src.exceptions.CalculatorError as message:
             print(f'{type(message).__name__}: {message}')
 
 

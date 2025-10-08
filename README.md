@@ -34,13 +34,27 @@
 		2. cd Calculator
 
 
->**Для разработчика**:
+>**Для разработчика (в терминале IDE с установленным uv)**:
 >
+>	
+>	>*(**Установка uv в терминале**):
+>	>
+>	>		I. sudo apt update
+>	>
+>	>		II. sudo apt install curl unzip -y
+>	>
+>	>		III. curl -LsSf https://astral.sh/uv/install.sh | sh
+>	>
+>	>		IV. echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+>	>
+>	>		V. source ~/.bashrc
+
+
 >		 3. uv sync
 >		 4. source .venv/bin/activate
 
 
 **Запуск**:
 
-	Для пользователя: python3 src/main.py
-	Для разработчика: uv run src/main.py
+	Для пользователя: python3 -m src.main
+	Для разработчика: uv run -m src.main
