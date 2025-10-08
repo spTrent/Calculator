@@ -4,7 +4,7 @@ class CalculatorError(Exception):
     pass
 
 
-class TypeError(CalculatorError):
+class FloatNotInt(CalculatorError):
     """
     Ошибка неверного типа данных:
     // и % только для целых.
@@ -14,17 +14,17 @@ class TypeError(CalculatorError):
         super().__init__(message)
 
 
-class InvalidInput(CalculatorError):
+class IncorrectInput(CalculatorError):
     """
     Ошибка неверного ввода:
-    неправильное количество чисел и операций.
+    неправильное количество чисел, операций или скобок.
     """
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
 
-class ZeroDivisionError(CalculatorError):
+class ZeroDivision(CalculatorError):
     """Деление на 0"""
 
     def __init__(self, message: str) -> None:

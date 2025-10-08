@@ -1,14 +1,14 @@
 import re
 from math import e, pi
 
-import exceptions
-from operations import operations
+import src.exceptions
+from src.operations import operations
 
 
 def check_accuracy(stdin: str) -> None:
     for el in stdin:
         if el not in '+-~$0123456789Eπ. ()*/%':
-            raise exceptions.InvalidInput(f'Неизвестный символ: {el}')
+            raise src.exceptions.IncorrectInput(f'Неизвестный символ: {el}')
 
 
 def remove_staples(stdin: str) -> str:
@@ -27,14 +27,18 @@ def remove_staples(stdin: str) -> str:
     opened_cnt: int = stdin.count('(')
     closed_cnt: int = stdin.count(')')
     if opened_cnt > closed_cnt:
-        raise exceptions.InvalidInput('Скобка открывается, но не закрывается')
+        raise src.exceptions.IncorrectInput(
+            'Скобка открывается, но не закрывается'
+        )
     if opened_cnt < closed_cnt:
-        raise exceptions.InvalidInput('Скобка закрывается, но не открывается')
+        raise src.exceptions.IncorrectInput(
+            'Скобка закрывается, но не открывается'
+        )
     for _ in range(opened_cnt):
         opened: int = stdin.rfind('(')
         closed: int = stdin.find(')', opened)
         if closed == -1:
-            raise exceptions.InvalidInput(
+            raise src.exceptions.IncorrectInput(
                 'Скобка открывается, но не закрывается'
             )
         current_staples = stdin[opened + 1 : closed]
@@ -114,7 +118,7 @@ def do_rpn(tokens: list[float | int | str]) -> float | int:
             new_token: float | int = operations[operator](item1, item2)
             stack.append(new_token)
         elif token in operations and len(stack) < 2:
-            raise exceptions.InvalidInput(
+            raise src.exceptions.IncorrectInput(
                 f"""Неверное количество операций и чисел:
              Количество чисел перед операцией({token}): {len(stack)}"""
             )
@@ -123,7 +127,7 @@ def do_rpn(tokens: list[float | int | str]) -> float | int:
             stack.append(num_token)
     if len(stack) == 1:
         return stack[0]
-    raise exceptions.InvalidInput(
+    raise src.exceptions.IncorrectInput(
         f"""Неверное количество операций и чисел:
              Операции закончились, количество оставшихся чисел: {len(stack)}"""
     )
