@@ -6,6 +6,15 @@ from src.operations import operations
 
 
 def check_accuracy(stdin: str) -> None:
+    """
+    Проверяет входную строку на наличие неизвестных символов
+
+    Args:
+        stdin(str): входная строка
+
+    Returns:
+        None, но если в строке неизвестный символ, то бросает исключение
+    """
     for el in stdin:
         if el not in '+-~$0123456789Eπ. ()*/%':
             raise src.exceptions.IncorrectInput(f'Неизвестный символ: {el}')
