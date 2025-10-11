@@ -42,15 +42,15 @@
 >	
 >	>*(**Установка uv в терминале**):
 >	>
->	>		I. sudo apt update
+>	>		sudo apt update
 >	>
->	>		II. sudo apt install curl unzip -y
+>	>		sudo apt install curl unzip -y
 >	>
->	>		III. curl -LsSf https://astral.sh/uv/install.sh | sh
+>	>		curl -LsSf https://astral.sh/uv/install.sh | sh
 >	>
->	>		IV. echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+>	>		echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 >	>
->	>		V. source ~/.bashrc
+>	>		source ~/.bashrc
 
 
 >		 3. uv sync
